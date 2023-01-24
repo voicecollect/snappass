@@ -1,18 +1,21 @@
-version: '2'
+version: '3'
 
 services:
+  shareit:
+    build: .
+    image: pinterest/snappass
+    container_name: shareit-snappass
+    ports:
+      - "5000:5000"
+    stop_signal: SIGINT
+    restart: always
+    environment:
+      - REDIS_HOST=redis
+      - NO_SSL=True
+    depends_on:
+      - redis
 
-    snappass:
-        build: .
-        image: pinterest/snappass
-        ports:
-            - "5000:5000"
-        stop_signal: SIGINT
-        environment:
-            - REDIS_HOST=redis
-            - NO_SSL=True
-        depends_on:
-          - redis
-
-    redis:
-        image: "redis:latest"
+  redis:
+    image: "redis:latest"
+    container_name: shareit-redis
+    restart: always
